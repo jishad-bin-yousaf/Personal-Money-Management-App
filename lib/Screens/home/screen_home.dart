@@ -16,6 +16,11 @@ class ScreenHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[200],
+      appBar: AppBar(
+        title: Text("Money Manager"),
+        centerTitle: true,
+      ),
       bottomNavigationBar: const MoneyManagerBottomNavigation(),
       body: SafeArea(
         child: ValueListenableBuilder(
@@ -26,7 +31,11 @@ class ScreenHome extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
-            print("Something added");
+            if (selectedIndexNotifier.value == 0) {
+              print("Something added in transactions");
+            } else {
+              print("Something added in category");
+            }
           },
           child: const Icon(Icons.add)),
     );
