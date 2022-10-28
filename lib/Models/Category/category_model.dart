@@ -24,9 +24,14 @@ class CategoryModel {
   final CategoryType type;
 
   CategoryModel({
-    required this.name,
     required this.id,
-    this.isDeleted = false,
+    required this.name,
     required this.type,
+    this.isDeleted = false,
   });
+
+  @override
+  String toString() {
+    return ' $name $type';
+  }
 }

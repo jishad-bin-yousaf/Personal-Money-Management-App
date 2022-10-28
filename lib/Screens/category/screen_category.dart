@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sample/Screens/category/expence_category_list.dart';
 import 'package:sample/Screens/category/income_category_list.dart';
+import 'package:sample/db/Category/category_db.dart';
 
 class ScreenCategory extends StatefulWidget {
   const ScreenCategory({super.key});
@@ -14,6 +15,12 @@ class _ScreenCategoryState extends State<ScreenCategory> with SingleTickerProvid
   @override
   void initState() {
     _tabController = TabController(length: 2, vsync: this);
+    CategoryDb().getCategories().then(
+      (value) {
+        print("Category get");
+        print(value);
+      },
+    );
     super.initState();
   }
 
@@ -32,7 +39,10 @@ class _ScreenCategoryState extends State<ScreenCategory> with SingleTickerProvid
         Expanded(
           child: TabBarView(
             controller: _tabController,
-            children: [IncomeCategoryList(), ExpenceCategoryList()],
+            children: [
+              IncomeCategoryList(),
+              ExpenceCategoryList(),
+            ],
           ),
         ),
       ],

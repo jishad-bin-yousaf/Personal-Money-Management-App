@@ -9,7 +9,10 @@ class IncomeCategoryList extends StatelessWidget {
       itemBuilder: (context, index) {
         return ListTile(
           title: Text("Icome Category ${index + 1}"),
-          trailing: IconButton(onPressed: () {}, icon: Icon(Icons.delete)),
+          trailing: IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.delete),
+          ),
         );
       },
       separatorBuilder: (context, index) {
