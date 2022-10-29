@@ -22,7 +22,7 @@ class ScreenHome extends StatelessWidget {
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
         title: Text("Money Manager"),
-        backgroundColor: Colors.purple,
+        backgroundColor: Color.fromARGB(255, 39, 176, 176),
         centerTitle: true,
       ),
       bottomNavigationBar: const MoneyManagerBottomNavigation(),
