@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:sample/Models/Category/category_model.dart';
+import 'package:sample/db/Category/category_db.dart';
+
+ValueNotifier<CategoryType> selectedCategoryNotifier = ValueNotifier(CategoryType.income);
 
 Future<void> showCategoryAddPopup(BuildContext context) async {
+  final _nameEditingController = TextEditingController();
   showDialog(
     context: context,
     builder: (ctx) {
@@ -11,6 +15,7 @@ Future<void> showCategoryAddPopup(BuildContext context) async {
           Padding(
             padding: const EdgeInsets.all(12.0),
             child: TextFormField(
+              controller: _nameEditingController,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(
                   gapPadding: 10,
@@ -19,23 +24,40 @@ Future<void> showCategoryAddPopup(BuildContext context) async {
               ),
             ),
           ),
-          Row(
-            children: const [
-              RadioButton(
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                RadioButton(
                   title: "Income",
                   type: CategoryType.income,
-                  selectedCategoryType: CategoryType.income),
-              RadioButton(
+                ),
+                RadioButton(
                   title: "Expence",
                   type: CategoryType.expense,
-                  selectedCategoryType: CategoryType.income),
-            ],
+                ),
+              ],
+            ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 50.0),
             child: ElevatedButton(
-              onPressed: () {},
-              child: Text("Add"),
+              onPressed: () {
+                final _name = _nameEditingController.text;
+                if (_name.isEmpty) {
+                  return;
+                }
+                final _type = selectedCategoryNotifier.value;
+                final _category = CategoryModel(
+                  id: DateTime.now().millisecondsSinceEpoch.toString(),
+                  name: _name,
+                  type: _type,
+                );
+                Navigator.of(ctx).pop(_category);
+                CategoryDb().insertCategory(_category);
+              },
+              child: const Text("Add"),
             ),
           ),
         ],
@@ -47,24 +69,31 @@ Future<void> showCategoryAddPopup(BuildContext context) async {
 class RadioButton extends StatelessWidget {
   final String title;
   final CategoryType type;
-  final CategoryType selectedCategoryType;
 
   const RadioButton({
     super.key,
     required this.title,
     required this.type,
-    required this.selectedCategoryType,
   });
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Radio<CategoryType>(
-          value: type,
-          groupValue: CategoryType.income,
-          onChanged: (value) {
-            value = type;
+        ValueListenableBuilder(
+          valueListenable: selectedCategoryNotifier,
+          builder: (BuildContext ctx, CategoryType newCategory, Widget? _) {
+            return Radio<CategoryType>(
+              value: type,
+              groupValue: newCategory,
+              onChanged: (value) {
+                if (value == null) {
+                  return;
+                }
+                selectedCategoryNotifier.value = value;
+                selectedCategoryNotifier.notifyListeners();
+              },
+            );
           },
         ),
         Text(title)
