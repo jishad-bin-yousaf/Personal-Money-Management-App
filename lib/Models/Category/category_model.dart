@@ -32,6 +32,7 @@ class CategoryModel {
 
   @override
   String toString() {
-    return '$id $name $type $isDeleted ';
+    return '{id: $id, name: $name, isDeleted: $isDeleted, type: $type}';
+    // return '{$id $name $type $isDeleted }';
   }
 }
