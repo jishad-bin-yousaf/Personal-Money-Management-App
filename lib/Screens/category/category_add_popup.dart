@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:sample/Models/Category/category_model.dart';
 import 'package:sample/db/Category/category_db.dart';
 

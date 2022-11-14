@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:sample/Models/Category/category_model.dart';
 
@@ -9,16 +10,39 @@ abstract class CategoryDbFunctions {
 }
 
 class CategoryDb implements CategoryDbFunctions {
+  ValueNotifier<List<CategoryModel>> incomeCategoryListListener = ValueNotifier([]);
+  ValueNotifier<List<CategoryModel>> expenseCategoryListListener = ValueNotifier([]);
+
   @override
   Future<void> insertCategory(CategoryModel value) async {
-    final _categoryDB = await Hive.openBox<CategoryModel>(CATEGORY_DB_NAME);
+    final categoryDB = await Hive.openBox<CategoryModel>(CATEGORY_DB_NAME);
 
-    _categoryDB.add(value);
+    categoryDB.add(value);
+    refreshUI();
   }
 
   @override
   Future<List<CategoryModel>> getCategories() async {
-    final _categoryDB = await Hive.openBox<CategoryModel>(CATEGORY_DB_NAME);
-    return _categoryDB.values.toList();
+    final categoryDB = await Hive.openBox<CategoryModel>(CATEGORY_DB_NAME);
+    return categoryDB.values.toList();
+  }
+
+  Future<void> refreshUI() async {
+    final allCategories = await getCategories();
+    incomeCategoryListListener.value.clear();
+    expenseCategoryListListener.value.clear();
+    await Future.forEach(
+      allCategories,
+      (CategoryModel category) {
+        if (category.type == CategoryType.income) {
+          incomeCategoryListListener.value.add(category);
+        } else {
+          expenseCategoryListListener.value.add(category);
+        }
+      },
+    );
+
+    incomeCategoryListListener.notifyListeners();
+    expenseCategoryListListener.notifyListeners();
   }
 }

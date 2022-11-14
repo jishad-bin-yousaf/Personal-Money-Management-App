@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:sample/Models/Category/category_model.dart';
 import 'package:sample/Screens/category/category_add_popup.dart';
 import 'package:sample/Screens/category/screen_category.dart';
@@ -34,7 +35,7 @@ class ScreenHome extends StatelessWidget {
             }),
       ),
       floatingActionButton: FloatingActionButton(
-          onPressed: () {
+          onPressed: () async {
             if (selectedIndexNotifier.value == 0) {
               print("Something added in transactions");
             } else {
